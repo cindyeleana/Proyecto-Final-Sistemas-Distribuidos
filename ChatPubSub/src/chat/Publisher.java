@@ -84,7 +84,7 @@ public class Publisher extends PubSubClient{
 	public static void main(String[] args) {
 		try {	
 			System.out.println("Entering application.");
-			String nodeName = "abc";
+			String nodeName = "xyz";
 			XMPPConnection.DEBUG_ENABLED = true;
 			Publisher p= new Publisher("cindy", "cindy", "localhost");
 			p.getOrCreateNode(nodeName);
