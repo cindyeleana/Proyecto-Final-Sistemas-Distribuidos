@@ -12,22 +12,22 @@ public class ItemEventCoordinator implements ItemEventListener {
     
     String subName;
 
-    public ItemEventCoordinator(String subName) {
-        System.out.println("new itemeventcoordinator");
-        this.subName = subName;
+    public ItemEventCoordinator() {
+        System.out.println("entra a clase new itemeventcoordinator");
+       
     }
 
     public void handlePublishedItems(ItemPublishEvent items) {
        
+    	
     	 System.out.println("Item count: " + items.getItems().size());
          Collection<? extends Item> itemss = items.getItems();
+         String itemM[];
          for (Item item : itemss) {
-                   PayloadItem pi = (PayloadItem) item;
-
-
-                   System.out.println("item: " + pi.toXML());
+        	 itemM = item.getId().split("-");
+             System.out.println("Message: " +itemM[1]);
          }
-        
+      
 
     }
 }

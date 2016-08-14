@@ -10,30 +10,15 @@ import org.jivesoftware.smackx.pubsub.*;
 import org.jivesoftware.smackx.pubsub.listener.ItemEventListener;
 import org.jivesoftware.smackx.*;
 
-public class Subscriber extends PubSubClient {
+public class Subscriber extends PubSub {
 	
     public HashMap<String, LeafNode> nodeSubscriptions;
 
-    public Subscriber(String userName, String password, String xmppserver) throws XMPPException, InterruptedException {
-        super(userName, password, xmppserver);
-        initNodesSubscribedTo();
-       // System.out.println("no initialization");
-    }
-
-    public Subscriber(String userName, String password, String xmppserver, int port, boolean createAccountIfNotExist) throws XMPPException, InterruptedException {
-        super(userName, password, xmppserver, port, createAccountIfNotExist);
+    public Subscriber(String userName, String password, String xmppserver, int port) throws XMPPException, InterruptedException {
+        super(userName, password, xmppserver, port);
         initNodesSubscribedTo();
     }
 
-    public Subscriber(String fileName) throws IOException, XMPPException, InterruptedException {
-        super(fileName);
-        initNodesSubscribedTo();
-    }
-
-    public Subscriber(String fileName, boolean createAccountIfNotExist) throws IOException, XMPPException, InterruptedException {
-        super(fileName, createAccountIfNotExist);
-        initNodesSubscribedTo();
-    }
     
     
     public void initNodesSubscribedTo() throws XMPPException {
@@ -42,7 +27,7 @@ public class Subscriber extends PubSubClient {
             List<Affiliation> affs = this.pubSubMgr.getAffiliations();
             for(Affiliation aff : affs ) {
                 String nodeName = aff.getNodeId();
-                System.out.println(this.getUser() + " esta afiliado a nodo "+ nodeName);
+               // System.out.println(this.getUser() + " esta afiliado a nodo "+ nodeName);
                 LeafNode node = this.getNode(nodeName);
                 nodeSubscriptions.put(nodeName, node);
             }  
@@ -52,47 +37,58 @@ public class Subscriber extends PubSubClient {
         }
     }
     
+    
+    
 
     public boolean isSubscribedTo(String nodeName) {
         boolean subscribed;
         subscribed = nodeSubscriptions.containsKey(nodeName);
-        System.out.println("está suscrito? " +subscribed);
         return subscribed;        
     }
     
-/*
-    public void subscribeTo(String nodeName) throws XMPPException {
-    	System.out.println("entra a subscribeTo");
-        LeafNode node = this.getNode(nodeName);
-        node.subscribe(this.getUser());
-//            nodes.add(node);
-//            nodesSubscribedTo.add(node.getId());
-        nodeSubscriptions.put(nodeName, node);
-        System.out.println(this.getUser() + " subscribed to node " + node.getId());
+    
+    public void SubscribeUser(LeafNode nd) throws XMPPException{
+ 	   System.out.println("Entra a susc");
+ 	   System.out.println("user es "+ this.getUser());
+ 	   nd.subscribe(this.getUser());
+ 	   
     }
-    
-    */
-    
 
 //*******************************+ Suscripcion**********************************   
     public void getOrCreateSubscription(String nodeName) throws XMPPException {
-    	System.out.println("entra a getOrCreateSubscription");
         //Subscription s = new Subscription(this.getUser(), nodeName);
     	if (!isSubscribedTo(nodeName)) {
-        	this.getNode(nodeName).subscribe(this.getUser());
-        	System.out.println(this.getUser() + " tiene suscripcion al nodo " + nodeName +"\n");
+    		LeafNode nd= this.getNode(nodeName);
+    		
+    		SubscribeUser(nd);
+    		 //nd.subscribe(this.getUser());
+        	nd.addItemEventListener(new ItemEventCoordinator());
+        	
+       // System.out.println(this.getUser() + " tiene suscripcion al nodo " + nodeName +"\n");
         	
         } else {
-        	System.out.println(this.getUser() + " ya esta suscrito a " + nodeName);
+        	//System.out.println(this.getUser() + " ya esta suscrito a " + nodeName);
         }
     }
 
     
+  
+ // Recibe nombre de nodo y obtiene los items publicados en ese nodo
+    public void GetItems(String nodename) throws XMPPException{
+    	System.out.println("Entra a GetItems ");
+    	LeafNode node= this.getNode(nodename);
+    	System.out.println("Item count: " + node.getItems().size());
+    	Collection<? extends Item> itemss = node.getItems();
+    	String itemM[];
+    	for (Item item : itemss) {
+    	  itemM = item.getId().split("-");
+          System.out.println("item: " +itemM[1]);
+        }
+    }
     
     
 
     public void deleteSubscriptions(String nodeName) throws XMPPException {
-    	System.out.println("entra a deleteSubscriptions");
     	LeafNode node=this.getNode(nodeName);
     	System.out.println(node);
         List<? extends Subscription> subs = node.getSubscriptions();
@@ -108,7 +104,7 @@ public class Subscriber extends PubSubClient {
     
     
     
-    void getAffSubs() throws InterruptedException {
+    public void getAffSubs(String nameNd) throws InterruptedException {
     	System.out.println("\n");
     	try{
     	//Lista de afiliaciones de usuario a nodos
@@ -125,26 +121,33 @@ public class Subscriber extends PubSubClient {
             String jid = sub.getJid();
             String id = sub.getId();
             String nodeNam = sub.getNode();
-            System.out.println(jid + " tiene suscripcion " + id + " al nodo " + nodeNam);
+            System.out.println(jid + " tiene suscripcion al nodo " + nodeNam);
             //s.deleteSubscriptions(nodeNam);
          }
-        
         } catch (XMPPException e) {
         	System.out.println(e);
         }
     	
     }
 
+   
     
     
-    
+   
     public static void main(String[] args) throws InterruptedException {
         try {
             XMPPConnection.DEBUG_ENABLED = true;
-            Subscriber s = new Subscriber("prueba", "prueba", "localhost");
-            String NodeN="xyz";
+            String user= "cindy";
+            String password= "cindy";
+            String domain= "localhost";
+            int port= 5222;
+            Subscriber s = new Subscriber(user, password, domain, port);
+            
+            String NodeN="NodoPrueba";
+            
             s.getOrCreateSubscription(NodeN);
-            s.getAffSubs();
+            s.GetItems(NodeN);
+            s.getAffSubs(NodeN);
             s.disconnect();
             
         } catch (XMPPException e) {

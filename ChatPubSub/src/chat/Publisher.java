@@ -15,39 +15,29 @@ import org.jivesoftware.smackx.pubsub.listener.ItemEventListener;
 import org.jivesoftware.smackx.*;
 
 
-public class Publisher extends PubSubClient{
+public class Publisher extends PubSub{
 
 	
 	public LeafNode node;
 
-	//Constructor that logs in or creates a user account with provided details (username, password) on the given server (xmppserver) using the default
-	 
-	public Publisher(String userName, String password, String xmppserver) throws XMPPException, InterruptedException {
-		super(userName, password, xmppserver);
+	public Publisher(String userName, String password, String xmppserver, int port) throws XMPPException, InterruptedException {
+		super(userName, password, xmppserver, port);
 	}
 
-	public Publisher(String userName, String password, String xmppserver, int port, boolean createAccountIfNotExist) throws XMPPException, InterruptedException {
-		super(userName, password, xmppserver, port, createAccountIfNotExist);
-	}
-
-	public Publisher(String fileName) throws IOException, XMPPException, InterruptedException {
-		super(fileName);
-	}
-
-	public Publisher(String fileName, boolean createAccountIfNotExist) throws IOException, XMPPException, InterruptedException {
-		super(fileName, createAccountIfNotExist);
-	}
+	
 
 	public LeafNode createNode(String nodename) throws XMPPException {
 		System.out.println("Creando nodo.......");
 		ConfigureForm form = new ConfigureForm(FormType.submit);
 		
 		form.setAccessModel(AccessModel.open);
-		form.setDeliverPayloads(true);
+		form.setDeliverPayloads(false);
 		form.setNotifyRetract(true);
 		form.setPersistentItems(true);
+		form.setSubscribe(true);
 		form.setPublishModel(PublishModel.open);
-		
+		form.setPresenceBasedDelivery(true);
+		form.setMaxItems(100);
 		//this.pubSubMgr.deleteNode(nodename);
 		
 		node = (LeafNode) this.pubSubMgr.createNode(nodename, form);
@@ -58,37 +48,66 @@ public class Publisher extends PubSubClient{
 
 	@Override
 	public LeafNode getNode(String nodename) throws XMPPException {
-		System.out.println("entra a obtener nodo");
-		
 		node = super.getNode(nodename);
-		
 		return node;
 	}
+	
+	
 
 	public LeafNode getOrCreateNode(String nodename) throws XMPPException {
 		try {
 			node = this.getNode(nodename);
 			
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Nodo no existe");
+			
+			// Crea nuevo nodo
 			node = this.createNode(nodename);	
 		}
-		//System.out.println("Publica nodo");
-		//node.publish(new Item("hola mmmmm"));
+		
+		String mssge= "Mensaje1";
+		
+		publishItem(node, mssge);
+		
 		return node;
 	}
 
+	
+	static Item createItem(String message) {  
+		
+		 String itemId = Long.toString(System.currentTimeMillis());  
+		 Item msg= new Item(itemId + "-" + message);
+		 return msg;  
+	}  
+	
+	
+	
+	public void publishItem (LeafNode node, String message) throws XMPPException{
+		Item item=createItem(message);
+		node.publish(item);
+	}
+	
 	
 	
 	
 	public static void main(String[] args) {
 		try {	
 			System.out.println("Entering application.");
-			String nodeName = "xyz";
+			String nodeName = "NodoPrueba";
+			
+			
+			String user= "prueba";
+            String password= "prueba";
+            String domain= "localhost";
+            int port= 5222;
+            
+            
 			XMPPConnection.DEBUG_ENABLED = true;
-			Publisher p= new Publisher("cindy", "cindy", "localhost");
+			Publisher p= new Publisher(user, password, domain, port);
 			p.getOrCreateNode(nodeName);
+			
 			p.disconnect();
+			
 		} catch (XMPPException e) {
 			System.out.println(e);
 		} catch (InterruptedException e) {
