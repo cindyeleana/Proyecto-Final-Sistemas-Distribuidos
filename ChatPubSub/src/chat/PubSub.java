@@ -1,7 +1,6 @@
 package chat;
 
 import java.io.*;
-
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.pubsub.*;
 import org.jivesoftware.smackx.*;
@@ -50,7 +49,7 @@ public class PubSub {
  
  
     // Enter your login information here
-    c.login("prueba", "prueba");
+    c.login("testuser1", "testuser1");
     
  
    

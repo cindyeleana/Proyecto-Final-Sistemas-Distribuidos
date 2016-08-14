@@ -84,11 +84,11 @@ public class Publisher extends PubSubClient{
 	public static void main(String[] args) {
 		try {	
 			System.out.println("Entering application.");
-			String nodeName = "xyz";
+			String nodeName = "TopicNode2";
 			XMPPConnection.DEBUG_ENABLED = true;
-			Publisher p= new Publisher("cindy", "cindy", "localhost");
+			Publisher p= new Publisher("testuser2", "123", "localhost");
 			p.getOrCreateNode(nodeName);
-			p.disconnect();
+			//p.disconnect();
 		} catch (XMPPException e) {
 			System.out.println(e);
 		} catch (InterruptedException e) {
