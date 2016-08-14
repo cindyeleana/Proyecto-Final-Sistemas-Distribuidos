@@ -45,21 +45,6 @@ public class MainWindow {
 	private NewContact nContact;
 	private NewGroup nGroup;
 
-	/**
-	 * Launch the application.
-	 *//*
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainWindow window = new MainWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
 
 	/**
 	 * Create the application.
@@ -118,7 +103,8 @@ public class MainWindow {
 		JPanel contactsPanel = new JPanel();
 		bContactslayout = new BoxLayout(contactsPanel, BoxLayout.Y_AXIS);
 		contactsPanel.setLayout(bContactslayout);
-		//agregar los contactos del usuario
+		
+		//agregar los contactos del usuario al panel donde se los mostrara
 		addContactsToPanel(contactsPanel);
 		JScrollPane panel_3 = new JScrollPane(contactsPanel);
 		panel.add(panel_3, BorderLayout.CENTER);
@@ -154,15 +140,14 @@ public class MainWindow {
 		);
 		panel_4.setLayout(gl_panel_4);
 		
-		JPanel panel_6 = new JPanel();
+		JPanel groupPanel = new JPanel();
+		groupPanel.setLayout(new BoxLayout(groupPanel, BoxLayout.Y_AXIS));
+		
+		//agregar los grupos del usuario al panel donde se los mostrara
+		addGroupsToPanel(groupPanel);
+		JScrollPane panel_6 = new JScrollPane(groupPanel);
 		panel_1.add(panel_6, BorderLayout.CENTER);
-		panel_6.setLayout(new BoxLayout(panel_6, BoxLayout.Y_AXIS));
-		GroupListItem group1 = new GroupListItem();
-		GroupListItem group2 = new GroupListItem();
-		GroupListItem group3 = new GroupListItem();
-		panel_6.add(group1);
-		panel_6.add(group2);
-		panel_6.add(group3);
+
 	}
 	
 	private void newContact(){
@@ -188,6 +173,19 @@ public class MainWindow {
 		panel.add(item3);
 		panel.add(item4);
 		panel.add(item5);
+	}
+	
+	private void addGroupsToPanel(JPanel panel){
+		GroupListItem group1 = new GroupListItem();
+		GroupListItem group2 = new GroupListItem();
+		GroupListItem group3 = new GroupListItem();
+		GroupListItem group4 = new GroupListItem();
+		GroupListItem group5 = new GroupListItem();
+		panel.add(group1);
+		panel.add(group2);
+		panel.add(group3);
+		panel.add(group4);
+		panel.add(group5);
 	}
 	
 	public JFrame getFrame() {
