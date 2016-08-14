@@ -61,7 +61,7 @@ public class LoginWindow {
 		frame.setMinimumSize(new Dimension(365, 422));
 		frame.setMaximumSize(new Dimension(365, 422));
 		frame.setBounds(100, 100, 379, 422);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		textField = new JTextField();
 		textField.setColumns(10);
@@ -75,10 +75,8 @@ public class LoginWindow {
 		btnLogin.setBackground(UIManager.getColor("Separator.shadow"));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				mwindow = new MainWindow();
-				mwindow.getFrame().setLocationRelativeTo(null);
-				mwindow.getFrame().setVisible(true);
-				frame.setVisible(false);
+				login();
+				
 			}
 		});
 		
@@ -88,10 +86,7 @@ public class LoginWindow {
 		JButton btnRegistrar = new JButton("Sign Up");
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				suWindow = new SignupWindow();
-				suWindow.getFrame().setLocationRelativeTo(null);
-				suWindow.getFrame().setVisible(true);
-				frame.setVisible(false);
+				signup();
 			}
 		});
 		btnRegistrar.setForeground(Color.BLACK);
@@ -139,5 +134,20 @@ public class LoginWindow {
 					.addContainerGap())
 		);
 		frame.getContentPane().setLayout(groupLayout);
+	}
+	
+	private void login(){
+		
+		mwindow = new MainWindow();
+		mwindow.getFrame().setLocationRelativeTo(null);
+		frame.setVisible(false);
+		mwindow.getFrame().setVisible(true);
+	}
+	
+	private void signup(){
+		suWindow = new SignupWindow();
+		suWindow.getFrame().setLocationRelativeTo(null);
+		suWindow.getFrame().setVisible(true);
+		frame.setVisible(false);
 	}
 }

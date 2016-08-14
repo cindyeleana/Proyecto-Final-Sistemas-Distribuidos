@@ -92,9 +92,7 @@ public class MainWindow {
 		JButton btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				nContact = new NewContact();
-				nContact.setLocationRelativeTo(null);
-				nContact.setVisible(true);
+				newContact();
 			}
 		});
 		btnNewButton.setMinimumSize(new Dimension(0, 0));
@@ -117,16 +115,13 @@ public class MainWindow {
 		);
 		panel_2.setLayout(gl_panel_2);
 		
-		JPanel panel_3 = new JPanel();
+		JPanel contactsPanel = new JPanel();
+		bContactslayout = new BoxLayout(contactsPanel, BoxLayout.Y_AXIS);
+		contactsPanel.setLayout(bContactslayout);
+		//agregar los contactos del usuario
+		addContactsToPanel(contactsPanel);
+		JScrollPane panel_3 = new JScrollPane(contactsPanel);
 		panel.add(panel_3, BorderLayout.CENTER);
-		ListContactItem item1 = new ListContactItem();
-		ListContactItem item2 = new ListContactItem();
-		ListContactItem item3 = new ListContactItem();
-		panel_3.add(item1);
-		panel_3.add(item2);
-		panel_3.add(item3);
-		bContactslayout = new BoxLayout(panel_3, BoxLayout.Y_AXIS);
-		panel_3.setLayout(bContactslayout);
 		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Grupos", null, panel_1, null);
@@ -138,9 +133,7 @@ public class MainWindow {
 		JButton btnNewButton_1 = new JButton("");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				nGroup = new NewGroup();
-				nGroup.setLocationRelativeTo(null);
-				nGroup.setVisible(true);
+				newGroup();
 			}
 		});
 		btnNewButton_1.setIcon(new ImageIcon(getClass().getResource("/Add User Group Man Man-25.png")));
@@ -170,6 +163,31 @@ public class MainWindow {
 		panel_6.add(group1);
 		panel_6.add(group2);
 		panel_6.add(group3);
+	}
+	
+	private void newContact(){
+		nContact = new NewContact();
+		nContact.setLocationRelativeTo(null);
+		nContact.setVisible(true);
+	}
+	
+	private void newGroup(){
+		nGroup = new NewGroup();
+		nGroup.setLocationRelativeTo(null);
+		nGroup.setVisible(true);
+	}
+	
+	private void addContactsToPanel(JPanel panel){
+		ListContactItem item1 = new ListContactItem();
+		ListContactItem item2 = new ListContactItem();
+		ListContactItem item3 = new ListContactItem();
+		ListContactItem item4 = new ListContactItem();
+		ListContactItem item5 = new ListContactItem();
+		panel.add(item1);
+		panel.add(item2);
+		panel.add(item3);
+		panel.add(item4);
+		panel.add(item5);
 	}
 	
 	public JFrame getFrame() {

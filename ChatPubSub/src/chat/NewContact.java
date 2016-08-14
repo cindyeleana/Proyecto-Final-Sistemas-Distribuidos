@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
+import java.awt.Dialog.ModalityType;
 
 public class NewContact extends JDialog {
 
@@ -38,6 +39,7 @@ public class NewContact extends JDialog {
 	 * Create the dialog.
 	 */
 	public NewContact() {
+		setModalityType(ModalityType.APPLICATION_MODAL);
 		setResizable(false);
 		setTitle("Agregar Contactos");
 		setBounds(100, 100, 392, 260);

@@ -50,7 +50,6 @@ public class ChatWindow {
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 351, 324);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
