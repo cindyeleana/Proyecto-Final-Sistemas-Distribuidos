@@ -107,7 +107,6 @@ public class Publisher extends PubSub{
 			p.getOrCreateNode(nodeName);
 			
 			p.disconnect();
-			
 		} catch (XMPPException e) {
 			System.out.println(e);
 		} catch (InterruptedException e) {

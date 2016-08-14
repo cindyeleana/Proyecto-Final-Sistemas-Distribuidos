@@ -59,6 +59,8 @@ public class PubSubClient {
         SmackConfiguration.setPacketReplyTimeout(60000);
         ConnectionConfiguration config = new ConnectionConfiguration(domain, port);
         connection = new XMPPConnection(config);
+        connection.getSASLAuthentication();
+        SASLAuthentication.supportSASLMechanism("PLAIN",0);
         connection.connect();
         
         try {

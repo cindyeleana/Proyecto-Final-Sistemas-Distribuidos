@@ -6,7 +6,6 @@ package chat;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
-
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.pubsub.*;
 import org.jivesoftware.smackx.*;
@@ -53,7 +52,7 @@ public class PubSub {
         System.out.println("PubSub manager created");
     }
 
-    
+ 
     
     public void CreateNewAccount(String userName, String password) throws XMPPException{
     	
