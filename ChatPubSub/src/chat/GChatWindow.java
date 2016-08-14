@@ -61,7 +61,7 @@ public class GChatWindow {
 		JTextArea textArea_1 = new JTextArea();
 		
 		JButton button = new JButton("");
-		button.setIcon(new ImageIcon("/home/diego/Proyecto-Final-Sistemas-Distribuidos/ChatPubSub/ChatIcons/Sent-25.png"));
+		button.setIcon(new ImageIcon(getClass().getResource("/Sent-25.png")));
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -96,12 +96,12 @@ public class GChatWindow {
 		toolBar.add(label);
 		
 		JButton button_1 = new JButton("");
-		button_1.setIcon(new ImageIcon("/home/diego/Proyecto-Final-Sistemas-Distribuidos/ChatPubSub/ChatIcons/Info-25.png"));
+		button_1.setIcon(new ImageIcon(getClass().getResource("/Info-25.png")));
 		button_1.setBorder(new EmptyBorder(0, 0, 0, 20));
 		toolBar.add(button_1);
 		
 		JButton button_2 = new JButton("salir");
-		button_2.setIcon(new ImageIcon("/home/diego/Proyecto-Final-Sistemas-Distribuidos/ChatPubSub/ChatIcons/Exit-25.png"));
+		button_2.setIcon(new ImageIcon(getClass().getResource("/Exit-25.png")));
 		button_2.setBorder(new EmptyBorder(0, 0, 0, 0));
 		toolBar.add(button_2);
 		frame.getContentPane().setLayout(groupLayout);

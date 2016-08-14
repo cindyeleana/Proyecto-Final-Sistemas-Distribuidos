@@ -44,7 +44,7 @@ public class ListContactItem extends JPanel {
 				cWindow.getFrame().setVisible(true);
 			}
 		});
-		button.setIcon(new ImageIcon("/home/diego/Proyecto-Final-Sistemas-Distribuidos/ChatPubSub/ChatIcons/Chat-25.png"));
+		button.setIcon(new ImageIcon(getClass().getResource("/Chat-25.png")));
 		button.setMinimumSize(new Dimension(0, 0));
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(

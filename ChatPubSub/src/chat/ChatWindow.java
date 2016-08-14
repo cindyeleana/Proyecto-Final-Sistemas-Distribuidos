@@ -61,7 +61,7 @@ public class ChatWindow {
 		JTextArea textArea_1 = new JTextArea();
 		
 		JButton button = new JButton("");
-		button.setIcon(new ImageIcon("/home/diego/Proyecto-Final-Sistemas-Distribuidos/ChatPubSub/ChatIcons/Sent-25.png"));
+		button.setIcon(new ImageIcon(getClass().getResource("/Sent-25.png")));
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)

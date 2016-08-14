@@ -98,7 +98,7 @@ public class MainWindow {
 			}
 		});
 		btnNewButton.setMinimumSize(new Dimension(0, 0));
-		btnNewButton.setIcon(new ImageIcon("/home/diego/Proyecto-Final-Sistemas-Distribuidos/ChatPubSub/ChatIcons/Add User Male-25.png"));
+		btnNewButton.setIcon(new ImageIcon(getClass().getResource("/Add User Male-25.png")));
 		btnNewButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
 		gl_panel_2.setHorizontalGroup(
@@ -143,7 +143,7 @@ public class MainWindow {
 				nGroup.setVisible(true);
 			}
 		});
-		btnNewButton_1.setIcon(new ImageIcon("/home/diego/Proyecto-Final-Sistemas-Distribuidos/ChatPubSub/ChatIcons/Add User Group Man Man-25.png"));
+		btnNewButton_1.setIcon(new ImageIcon(getClass().getResource("/Add User Group Man Man-25.png")));
 		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
 		gl_panel_4.setHorizontalGroup(
 			gl_panel_4.createParallelGroup(Alignment.TRAILING)
