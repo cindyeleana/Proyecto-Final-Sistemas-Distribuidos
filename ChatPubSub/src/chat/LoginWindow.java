@@ -10,6 +10,9 @@ import java.awt.Component;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import org.jivesoftware.smack.XMPPException;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.Font;
@@ -23,10 +26,11 @@ import javax.swing.UIManager;
 public class LoginWindow {
 
 	private JFrame frame;
-	private JTextField textField;
-	private JPasswordField pwdErrerererererer;
+	private JTextField userTextField;
+	private JPasswordField pwdTextField;
 	private MainWindow mwindow;
 	private SignupWindow suWindow;
+	private PubSub pubsub;
 	/**
 	 * Launch the application.
 	 */
@@ -49,6 +53,18 @@ public class LoginWindow {
 	 */
 	public LoginWindow() {
 		initialize();
+		pubsub = new PubSub();
+		initConnection();
+	}
+	
+	private void initConnection(){
+		try{
+			pubsub.connect("localhost", 5222);
+		}catch(InterruptedException e) {
+       	 System.out.println("Error al conectar ");
+       }catch(XMPPException e) {
+         	 System.out.println("Error al conectar ");
+       }
 	}
 
 	/**
@@ -63,8 +79,8 @@ public class LoginWindow {
 		frame.setBounds(100, 100, 379, 422);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
+		userTextField = new JTextField();
+		userTextField.setColumns(10);
 		
 		JLabel lblUsername = new JLabel("Username");
 		
@@ -92,7 +108,7 @@ public class LoginWindow {
 		btnRegistrar.setForeground(Color.BLACK);
 		btnRegistrar.setBackground(UIManager.getColor("Separator.shadow"));
 		
-		pwdErrerererererer = new JPasswordField();
+		pwdTextField = new JPasswordField();
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -103,9 +119,9 @@ public class LoginWindow {
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 								.addComponent(lblPassword, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblUsername)
-								.addComponent(textField)
+								.addComponent(userTextField)
 								.addComponent(btnLogin, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(pwdErrerererererer)))
+								.addComponent(pwdTextField)))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(152)
 							.addComponent(lblChatLogin))
@@ -122,11 +138,11 @@ public class LoginWindow {
 					.addGap(61)
 					.addComponent(lblUsername)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(textField, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+					.addComponent(userTextField, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(lblPassword)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(pwdErrerererererer, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+					.addComponent(pwdTextField, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
 					.addGap(26)
 					.addComponent(btnLogin)
 					.addPreferredGap(ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
@@ -137,15 +153,24 @@ public class LoginWindow {
 	}
 	
 	private void login(){
+		String name, username; 
+		name = username = this.userTextField.getText();
+		String pwd = String.valueOf(this.pwdTextField.getPassword());
 		
-		mwindow = new MainWindow();
-		mwindow.getFrame().setLocationRelativeTo(null);
-		frame.setVisible(false);
-		mwindow.getFrame().setVisible(true);
+		try {
+			pubsub.login(username,pwd);
+			mwindow = new MainWindow(new User(name, username,pwd), pubsub);
+			mwindow.getFrame().setLocationRelativeTo(null);
+			frame.setVisible(false);
+			mwindow.getFrame().setVisible(true);
+		} catch (XMPPException | InterruptedException e) {
+			 System.out.println("Error de login ");
+		}
+		
 	}
 	
 	private void signup(){
-		suWindow = new SignupWindow();
+		suWindow = new SignupWindow(pubsub);
 		suWindow.getFrame().setLocationRelativeTo(null);
 		suWindow.getFrame().setVisible(true);
 		frame.setVisible(false);

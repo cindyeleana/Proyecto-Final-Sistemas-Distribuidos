@@ -17,36 +17,37 @@ import javax.swing.UIManager;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
+
+import org.jivesoftware.smack.XMPPException;
+
 import javax.swing.border.MatteBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class SignupWindow {
 
 	private JFrame frame;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JPasswordField pwdJkjk;
-
-	/**
-	 * Launch the application.
-	 *//*
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SignupWindow window = new SignupWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
-
+	private JTextField nameTextField;
+	private JTextField userTextField;
+	private JPasswordField pwdTextField;
+	private PubSub pubsub;
+	private MainWindow mwindow;
 	/**
 	 * Create the application.
 	 */
-	public SignupWindow() {
+	public SignupWindow(PubSub pubsub) {
+		pubsub = pubsub;
 		initialize();
+	}
+	
+	private void initConnection(){
+		try{
+			pubsub.connect("localhost", 5222);
+		}catch(InterruptedException e) {
+       	 System.out.println("Error al conectar ");
+       }catch(XMPPException e) {
+         	 System.out.println("Error al conectar ");
+       }
 	}
 
 	/**
@@ -66,15 +67,20 @@ public class SignupWindow {
 		
 		JLabel lblContrasena = new JLabel("Contrasena:");
 		
-		textField = new JTextField();
-		lblNombre.setLabelFor(textField);
-		textField.setColumns(10);
+		nameTextField = new JTextField();
+		lblNombre.setLabelFor(nameTextField);
+		nameTextField.setColumns(10);
 		
-		textField_1 = new JTextField();
-		lblUsuario.setLabelFor(textField_1);
-		textField_1.setColumns(10);
+		userTextField = new JTextField();
+		lblUsuario.setLabelFor(userTextField);
+		userTextField.setColumns(10);
 		
 		JButton btnRegistrar = new JButton("Registrar");
+		btnRegistrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				newAccount();
+			}
+		});
 		btnRegistrar.setForeground(Color.BLACK);
 		btnRegistrar.setBackground(UIManager.getColor("Separator.shadow"));
 		
@@ -82,7 +88,7 @@ public class SignupWindow {
 		btnCancelar.setForeground(Color.BLACK);
 		btnCancelar.setBackground(UIManager.getColor("Separator.shadow"));
 		
-		pwdJkjk = new JPasswordField();
+		pwdTextField = new JPasswordField();
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -99,9 +105,9 @@ public class SignupWindow {
 								.addComponent(lblUsuario)
 								.addComponent(lblNombre)
 								.addComponent(lblContrasena)
-								.addComponent(textField)
-								.addComponent(textField_1)
-								.addComponent(pwdJkjk)
+								.addComponent(nameTextField)
+								.addComponent(userTextField)
+								.addComponent(pwdTextField)
 								.addComponent(lblNuevaCuenta))))
 					.addContainerGap())
 		);
@@ -113,15 +119,15 @@ public class SignupWindow {
 					.addGap(45)
 					.addComponent(lblNombre)
 					.addGap(5)
-					.addComponent(textField, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+					.addComponent(nameTextField, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lblUsuario)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+					.addComponent(userTextField, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lblContrasena)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(pwdJkjk, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+					.addComponent(pwdTextField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnRegistrar)
@@ -129,6 +135,22 @@ public class SignupWindow {
 					.addGap(21))
 		);
 		frame.getContentPane().setLayout(groupLayout);
+	}
+	
+	private void newAccount(){
+		String name = this.nameTextField.getText();
+		String username = this.userTextField.getText();
+		String pwd = String.valueOf(this.pwdTextField.getPassword());
+		
+		try {
+			pubsub.CreateNewAccount(username, pwd);
+			mwindow = new MainWindow(new User(name, username,pwd), pubsub);
+			mwindow.getFrame().setLocationRelativeTo(null);
+			frame.setVisible(false);
+			mwindow.getFrame().setVisible(true);
+		} catch (XMPPException e) {
+			 System.out.println("Cuenta ya creada ");
+		}
 	}
 	
 	public JFrame getFrame() {

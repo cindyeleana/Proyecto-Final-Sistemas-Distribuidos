@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
 import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.pubsub.*;
 import org.jivesoftware.smackx.*;
 import org.jivesoftware.smackx.packet.DiscoverItems;
@@ -16,6 +17,8 @@ public class PubSub {
 	protected XMPPConnection connection;
     protected PubSubManager pubSubMgr;
 
+    public PubSub(){}
+    
   //Constructor 
     public PubSub(String userName, String password, String domain, int port) throws XMPPException, InterruptedException {
         this.init(userName, password, domain, port);
@@ -33,18 +36,13 @@ public class PubSub {
 		SASLAuthentication.supportSASLMechanism("PLAIN", 0);
 		connection.connect();
         
-        try {
+        /*try {
         	CreateNewAccount(userName, password);
             System.out.println(" Usuario: " + userName + " se ha registrado ");
         } catch(XMPPException e) {
         	 System.out.println("Usuario: " + userName + " ya registrado ");
-        }
-        try {
-            connection.login(userName, password); 
-            System.out.println("Usuario: " + connection.getUser() + " inicia sesión ");
-        } catch(IllegalStateException e) {
-        	 System.out.println("Usuario " + connection.getUser() + " ya inició sesión ");
-        }
+        }*/
+        
        
         
         // Creación del pubsub manager
@@ -52,12 +50,44 @@ public class PubSub {
         System.out.println("PubSub manager created");
     }
 
+    public void connect(String domain, int port)throws XMPPException, InterruptedException{
+    	SmackConfiguration.setPacketReplyTimeout(60000);
+        ConnectionConfiguration config = new ConnectionConfiguration(domain, port);
+        config.setSASLAuthenticationEnabled(true);
+        connection = new XMPPConnection(config);
+        connection.getSASLAuthentication();
+		SASLAuthentication.supportSASLMechanism("PLAIN", 0);
+		connection.connect();
+    }
+    
+    public void login(String userName, String password) throws XMPPException, InterruptedException{
+    	try {
+            connection.login(userName, password); 
+            System.out.println("Usuario: " + connection.getUser() + " inicia sesión ");
+        } catch(IllegalStateException e) {
+        	 System.out.println("Usuario " + connection.getUser() + " ya inició sesión ");
+        }
+    }
  
     
+    
     public void CreateNewAccount(String userName, String password) throws XMPPException{
-    	
-    	connection.getAccountManager().createAccount(userName, password);
-    	System.out.println(" Usuario: " + userName + " se ha registrado ");
+		connection.getAccountManager().createAccount(userName, password);
+        System.out.println(" Usuario: " + userName + " se ha registrado ");      
+    }
+    
+    public Collection<RosterEntry> getContacts(){
+    	Collection<RosterEntry> list = null;
+    	Roster roster = connection.getRoster();
+    	if(roster!= null){
+    		list = roster.getEntries();
+    		System.out.println("list is" + list);
+    	}
+    	return list;
+    }
+    
+    public Presence getPrecence(String user){
+    	return connection.getRoster().getPresence(user);
     }
     
     //Disconnect
@@ -70,7 +100,10 @@ public class PubSub {
         }
     }
 
-   
+   public void createEntry(String user, String name) throws XMPPException{
+	   Roster roster = connection.getRoster();
+	   roster.createEntry(user, name, null);
+   }
      
     public String getUser() {
         return connection.getUser();

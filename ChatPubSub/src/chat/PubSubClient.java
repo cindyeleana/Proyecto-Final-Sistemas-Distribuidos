@@ -15,6 +15,8 @@ public class PubSubClient {
 	
 	protected XMPPConnection connection;
     protected PubSubManager pubSubMgr;
+    
+    public PubSubClient(){}
 
     //Constructor 1
     public PubSubClient(String userName, String password, String xmppserver) throws XMPPException, InterruptedException {

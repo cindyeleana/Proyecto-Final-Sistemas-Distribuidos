@@ -9,6 +9,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JTabbedPane;
 import java.awt.Button;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 import java.awt.GridLayout;
 import javax.swing.JButton;
@@ -22,6 +23,11 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.border.LineBorder;
+
+import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Presence;
+
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.border.BevelBorder;
@@ -36,7 +42,10 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.awt.event.ActionEvent;
+import javax.swing.JToolBar;
+import javax.swing.border.EmptyBorder;
 
 public class MainWindow {
 
@@ -44,24 +53,26 @@ public class MainWindow {
 	private BoxLayout bContactslayout;
 	private NewContact nContact;
 	private NewGroup nGroup;
-
-
+	private User userClass;
+	private PubSub pubsub;
 	/**
 	 * Create the application.
 	 */
-	public MainWindow() {
+	public MainWindow(User user, PubSub pubsub) {
+		this.userClass = user;
+		this.pubsub = pubsub;
 		initialize();
 	}
-
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 358, 389);
+		frame.setBounds(100, 100, 389, 407);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		//tabbedPane.setLayout(glayout);
@@ -101,6 +112,7 @@ public class MainWindow {
 		panel_2.setLayout(gl_panel_2);
 		
 		JPanel contactsPanel = new JPanel();
+		contactsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		bContactslayout = new BoxLayout(contactsPanel, BoxLayout.Y_AXIS);
 		contactsPanel.setLayout(bContactslayout);
 		
@@ -147,11 +159,19 @@ public class MainWindow {
 		addGroupsToPanel(groupPanel);
 		JScrollPane panel_6 = new JScrollPane(groupPanel);
 		panel_1.add(panel_6, BorderLayout.CENTER);
-
+		
+		JToolBar toolBar = new JToolBar();
+		toolBar.setFloatable(false);
+		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
+		
+		JLabel lblUser = new JLabel(this.userClass.getUsername());
+		lblUser.setBorder(new EmptyBorder(5, 15, 5, 0));
+		toolBar.add(lblUser);
+		
 	}
 	
 	private void newContact(){
-		nContact = new NewContact();
+		nContact = new NewContact(pubsub);
 		nContact.setLocationRelativeTo(null);
 		nContact.setVisible(true);
 	}
@@ -163,16 +183,22 @@ public class MainWindow {
 	}
 	
 	private void addContactsToPanel(JPanel panel){
-		ListContactItem item1 = new ListContactItem();
-		ListContactItem item2 = new ListContactItem();
-		ListContactItem item3 = new ListContactItem();
-		ListContactItem item4 = new ListContactItem();
-		ListContactItem item5 = new ListContactItem();
-		panel.add(item1);
-		panel.add(item2);
-		panel.add(item3);
-		panel.add(item4);
-		panel.add(item5);
+		Collection<RosterEntry> contacts = pubsub.getContacts();
+		Presence presence;
+		String status = "", type = "unavailable";
+		User contactUser;
+		if(contacts != null){
+			for(RosterEntry contact : contacts){
+				presence = pubsub.getPrecence(contact.getUser());
+				if(presence != null){
+					status = presence.getStatus();
+					type = presence.getType().name();
+				}
+				contactUser = new User("",contact.getUser(),"",status, type);
+				ListContactItem item = new ListContactItem(userClass,contactUser);
+				panel.add(item);
+			}
+		}
 	}
 	
 	private void addGroupsToPanel(JPanel panel){
