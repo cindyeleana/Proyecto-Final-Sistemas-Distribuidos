@@ -195,7 +195,7 @@ public class MainWindow {
 					type = presence.getType().name();
 				}
 				contactUser = new User("",contact.getUser(),"",status, type);
-				ListContactItem item = new ListContactItem(userClass,contactUser);
+				ListContactItem item = new ListContactItem(userClass,contactUser,pubsub);
 				panel.add(item);
 			}
 		}

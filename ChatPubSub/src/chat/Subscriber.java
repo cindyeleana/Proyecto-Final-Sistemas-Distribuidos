@@ -14,9 +14,9 @@ public class Subscriber extends PubSub {
 	
     public HashMap<String, LeafNode> nodeSubscriptions;
 
-    public Subscriber(String userName, String password, String xmppserver, int port) throws XMPPException, InterruptedException {
-        super(userName, password, xmppserver, port);
-        initNodesSubscribedTo();
+    public Subscriber(XMPPConnection connection)  {
+    	super.connection = connection;
+        //initNodesSubscribedTo();
     }
 
     
@@ -131,29 +131,5 @@ public class Subscriber extends PubSub {
     }
 
    
-    
-    
-   
-    public static void main(String[] args) throws InterruptedException {
-        try {
-            XMPPConnection.DEBUG_ENABLED = true;
-            String user= "cindy";
-            String password= "cindy";
-            String domain= "localhost";
-            int port= 5222;
-            Subscriber s = new Subscriber(user, password, domain, port);
-            
-            String NodeN="NodoPrueba";
-            
-            s.getOrCreateSubscription(NodeN);
-            s.GetItems(NodeN);
-            s.getAffSubs(NodeN);
-            s.disconnect();
-            
-        } catch (XMPPException e) {
-        	System.out.println(e);
-        } catch (InterruptedException e) {
-        	System.out.println(e);
-        }
-    }
+ 
 }

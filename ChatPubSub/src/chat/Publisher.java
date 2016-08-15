@@ -20,8 +20,9 @@ public class Publisher extends PubSub{
 	
 	public LeafNode node;
 
-	public Publisher(String userName, String password, String xmppserver, int port) throws XMPPException, InterruptedException {
-		super(userName, password, xmppserver, port);
+	public Publisher(XMPPConnection connection, PubSubManager pubsubmgr)  {
+		super.connection = connection;
+		super.pubSubMgr = pubsubmgr;
 	}
 
 	
@@ -65,10 +66,6 @@ public class Publisher extends PubSub{
 			node = this.createNode(nodename);	
 		}
 		
-		String mssge= "Mensaje1";
-		
-		publishItem(node, mssge);
-		
 		return node;
 	}
 
@@ -89,31 +86,5 @@ public class Publisher extends PubSub{
 	
 	
 	
-	
-	public static void main(String[] args) {
-		try {	
-			System.out.println("Entering application.");
-			String nodeName = "NodoPrueba";
-			
-			
-			String user= "prueba";
-            String password= "prueba";
-            String domain= "localhost";
-            int port= 5222;
-            
-            
-			XMPPConnection.DEBUG_ENABLED = true;
-			Publisher p= new Publisher(user, password, domain, port);
-			p.getOrCreateNode(nodeName);
-			
-			p.disconnect();
-		} catch (XMPPException e) {
-			System.out.println(e);
-		} catch (InterruptedException e) {
-			System.out.println(e);
-	}
-			
-
-	}
 
 }

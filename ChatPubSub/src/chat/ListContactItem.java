@@ -22,12 +22,14 @@ public class ListContactItem extends JPanel {
 	private ChatWindow cWindow;
 	private User user;
 	private User contact;
+	private PubSub pubsub;
 	/**
 	 * Create the panel.
 	 */
-	public ListContactItem(User user, User contact) {
+	public ListContactItem(User user, User contact, PubSub pubsub) {
 		this.user = user;
 		this.contact = contact;
+		this.pubsub = pubsub;
 		init();
 	}
 	
@@ -52,9 +54,7 @@ public class ListContactItem extends JPanel {
 		JButton button = new JButton("");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cWindow = new ChatWindow();
-				cWindow.getFrame().setLocationRelativeTo(null);
-				cWindow.getFrame().setVisible(true);
+				newChat();
 			}
 		});
 		button.setIcon(new ImageIcon(getClass().getResource("/Chat-25.png")));
@@ -88,5 +88,12 @@ public class ListContactItem extends JPanel {
 					.addContainerGap())
 		);
 		setLayout(groupLayout);
+	}
+	
+	private void newChat(){
+		Publisher publisher = new Publisher(pubsub.getConnection(), pubsub.getPubSubMgr());
+		cWindow = new ChatWindow(publisher,user,contact);
+		cWindow.getFrame().setLocationRelativeTo(null);
+		cWindow.getFrame().setVisible(true);
 	}
 }

@@ -17,37 +17,18 @@ public class PubSub {
 	protected XMPPConnection connection;
     protected PubSubManager pubSubMgr;
 
-    public PubSub(){}
+    public PubSub(){
+    	initPubSubMgr();
+    }
     
-  //Constructor 
+  /*//Constructor 
     public PubSub(String userName, String password, String domain, int port) throws XMPPException, InterruptedException {
         this.init(userName, password, domain, port);
-    }
+    }*/
 
     
     
-    //Initialize
-    public void init(String userName, String password, String domain, int port) throws XMPPException, InterruptedException {
-        SmackConfiguration.setPacketReplyTimeout(60000);
-        ConnectionConfiguration config = new ConnectionConfiguration(domain, port);
-        config.setSASLAuthenticationEnabled(true);
-        connection = new XMPPConnection(config);
-        connection.getSASLAuthentication();
-		SASLAuthentication.supportSASLMechanism("PLAIN", 0);
-		connection.connect();
-        
-        /*try {
-        	CreateNewAccount(userName, password);
-            System.out.println(" Usuario: " + userName + " se ha registrado ");
-        } catch(XMPPException e) {
-        	 System.out.println("Usuario: " + userName + " ya registrado ");
-        }*/
-        
-       
-        
-        // Creación del pubsub manager
-        pubSubMgr = new PubSubManager(connection,"pubsub."+ connection.getServiceName());
-        System.out.println("PubSub manager created");
+    public void initPubSubMgr(){
     }
 
     public void connect(String domain, int port)throws XMPPException, InterruptedException{
@@ -58,6 +39,7 @@ public class PubSub {
         connection.getSASLAuthentication();
 		SASLAuthentication.supportSASLMechanism("PLAIN", 0);
 		connection.connect();
+		pubSubMgr = new PubSubManager(connection,"pubsub."+ connection.getServiceName());
     }
     
     public void login(String userName, String password) throws XMPPException, InterruptedException{
@@ -116,7 +98,11 @@ public class PubSub {
         return node;
     }
     
-    // getter for the PubSubManager
+    public XMPPConnection getConnection() {
+		return connection;
+	}
+
+// getter for the PubSubManager
    public PubSubManager getPubSubMgr() {
 		return pubSubMgr;
 	}
