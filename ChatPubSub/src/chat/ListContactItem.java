@@ -13,6 +13,9 @@ import java.awt.Dimension;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.border.MatteBorder;
+
+import org.jivesoftware.smackx.pubsub.LeafNode;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
@@ -23,13 +26,19 @@ public class ListContactItem extends JPanel {
 	private User user;
 	private User contact;
 	private PubSub pubsub;
+	private Publisher pub;
+	private Subscriber sub;
+	private LeafNode chatnode;
 	/**
 	 * Create the panel.
 	 */
-	public ListContactItem(User user, User contact, PubSub pubsub) {
+	public ListContactItem(User user, User contact, PubSub pubsub, Publisher pub, Subscriber sub, LeafNode chatnode) {
 		this.user = user;
 		this.contact = contact;
 		this.pubsub = pubsub;
+		this.pub = pub;
+		this.sub = sub;
+		this.chatnode = chatnode;
 		init();
 	}
 	
@@ -91,9 +100,8 @@ public class ListContactItem extends JPanel {
 	}
 	
 	private void newChat(){
-		Publisher publisher = new Publisher(pubsub.getConnection(), pubsub.getPubSubMgr());
-		Subscriber subscriber = new Subscriber(pubsub.getConnection(), pubsub.getPubSubMgr());
-		cWindow = new ChatWindow(publisher,subscriber,user,contact);
+		sub.addEventCoordinator(chatnode);
+		cWindow = new ChatWindow(pub,sub,user,contact);
 		cWindow.getFrame().setLocationRelativeTo(null);
 		cWindow.getFrame().setVisible(true);
 	}

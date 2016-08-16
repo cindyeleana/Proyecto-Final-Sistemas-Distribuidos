@@ -145,12 +145,17 @@ public class SignupWindow {
 		
 		try {
 			pubsub.CreateNewAccount(username, pwd);
+			pubsub.login(username, pwd);
 			mwindow = new MainWindow(new User(name, username,pwd), pubsub);
 			mwindow.getFrame().setLocationRelativeTo(null);
 			frame.setVisible(false);
 			mwindow.getFrame().setVisible(true);
 		} catch (XMPPException e) {
 			 System.out.println("Cuenta ya creada ");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Error al realizar login ");
+			e.printStackTrace();
 		}
 	}
 	

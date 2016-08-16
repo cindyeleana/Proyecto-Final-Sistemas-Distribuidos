@@ -13,16 +13,20 @@ import org.jivesoftware.smackx.*;
 public class Subscriber extends PubSub {
 	
     public HashMap<String, LeafNode> nodeSubscriptions;
+    public ItemEventCoordinator eventCordinator;
 
     public Subscriber(XMPPConnection connection, PubSubManager pubsubmgr)  {
     	super.connection = connection;
     	super.pubSubMgr = pubsubmgr;
-        //initNodesSubscribedTo();
+        initNodesSubscribedTo();
     }
 
+    public void addEventCoordinator(LeafNode nd){
+    	eventCordinator = new ItemEventCoordinator();
+  	    nd.addItemEventListener(eventCordinator);
+    }
     
-    
-    public void initNodesSubscribedTo() throws XMPPException {
+    public void initNodesSubscribedTo(){
         nodeSubscriptions = new HashMap<String, LeafNode>();
          try {
             List<Affiliation> affs = this.pubSubMgr.getAffiliations();
@@ -53,10 +57,9 @@ public class Subscriber extends PubSub {
  	   System.out.println("user es "+ user);
  	   String[] parts = this.getUser().split("@");
  	   String[] domainParts = parts[1].split("/");
- 	  System.out.println(user+"@"+parts[1]);
+ 	   System.out.println(user+"@"+parts[1]);
  	   //nd.subscribe(user+"@"+parts[1]);
- 	  nd.subscribe(user+"@"+parts[1]);
- 	   
+ 	   nd.subscribe(this.getUser());
     }
 
 //*******************************+ Suscripcion**********************************   

@@ -18,6 +18,8 @@ import org.jivesoftware.smackx.pubsub.LeafNode;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.border.MatteBorder;
+import java.awt.Color;
 
 public class ChatWindow {
 
@@ -66,9 +68,14 @@ public class ChatWindow {
 		toolBar.setFloatable(false);
 		
 		JTextArea historyTxt = new JTextArea();
+		historyTxt.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		historyTxt.setEditable(false);
 		
+		subscriber.eventCordinator.setChatmsgs(historyTxt);
+		subscriber.eventCordinator.setContactName(contact.getUsername());
+		
 		JTextArea messageTxt = new JTextArea();
+		messageTxt.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		
 		JButton button = new JButton("");
 		button.addActionListener(new ActionListener() {

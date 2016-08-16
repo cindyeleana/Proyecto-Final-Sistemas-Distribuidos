@@ -88,13 +88,26 @@ public class PubSub {
     //GetNode
     public LeafNode getNode(String nodename) throws XMPPException {
         LeafNode node = (LeafNode) pubSubMgr.getNode(nodename);
-        System.out.println("Se obtuvo el nodo: " + nodename);
         return node;
     }
     
     public XMPPConnection getConnection() {
 		return connection;
 	}
+    
+    public Boolean searchNode(String name){
+    	Boolean finded = false;
+    	try {
+			this.getNode(name);
+			System.out.println("Se obtuvo el nodo: " + name);
+			finded = true;
+		} catch (XMPPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return finded;
+    }
 
 // getter for the PubSubManager
    public PubSubManager getPubSubMgr() {

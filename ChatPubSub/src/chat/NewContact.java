@@ -98,17 +98,13 @@ public class NewContact extends JDialog {
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
-			{
-				JButton cancelButton = new JButton("Cancelar");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
 		}
 	}
 	
 	private void newContact(){
 		try{
 			pubsub.createEntry(this.userTextField.getText(), this.nickTextField.getText());
+			dispose();
 		}catch(XMPPException e){
 			
 		}

@@ -27,6 +27,8 @@ import javax.swing.border.LineBorder;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.pubsub.Item;
+import org.jivesoftware.smackx.pubsub.LeafNode;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
@@ -43,6 +45,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
@@ -55,19 +58,31 @@ public class MainWindow {
 	private NewGroup nGroup;
 	private User userClass;
 	private PubSub pubsub;
+	private JPanel contactsPanel;
+	private Publisher publisher;
+	private Subscriber subscriber;
+	private LeafNode groupnd ;
 	/**
 	 * Create the application.
 	 */
 	public MainWindow(User user, PubSub pubsub) {
 		this.userClass = user;
 		this.pubsub = pubsub;
-		/*String[] parts = pubsub.getUser().split("@");
-		System.out.println(parts[0]);
-		System.out.println(parts[1]);*/
+		this.publisher = new Publisher(pubsub.getConnection(), pubsub.getPubSubMgr());
+		this.subscriber = new Subscriber(pubsub.getConnection(), pubsub.getPubSubMgr());
+		
+		try {
+			groupnd = publisher.createNode("test1:test2:test3:test4:testuser5");
+		} catch (XMPPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/*
 		String[] parts = pubsub.getUser().split("@");
 	 	String[] domainParts = parts[1].split("/");
 	 	System.out.println(parts[0]);
-		System.out.println(domainParts[0]);
+		System.out.println(domainParts[0]);*/
 		initialize();
 	}
 	
@@ -118,7 +133,7 @@ public class MainWindow {
 		);
 		panel_2.setLayout(gl_panel_2);
 		
-		JPanel contactsPanel = new JPanel();
+		contactsPanel = new JPanel();
 		contactsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		bContactslayout = new BoxLayout(contactsPanel, BoxLayout.Y_AXIS);
 		contactsPanel.setLayout(bContactslayout);
@@ -181,6 +196,8 @@ public class MainWindow {
 		nContact = new NewContact(pubsub);
 		nContact.setLocationRelativeTo(null);
 		nContact.setVisible(true);
+		contactsPanel.removeAll();
+		addContactsToPanel(contactsPanel);
 	}
 	
 	private void newGroup(){
@@ -194,8 +211,40 @@ public class MainWindow {
 		Presence presence;
 		String status = "", type = "unavailable";
 		User contactUser;
+		
 		if(contacts != null){
 			for(RosterEntry contact : contacts){
+				String chatName1 = userClass.getUsername()+":"+contact.getUser();
+				String chatName2 = contact.getUser()+":"+userClass.getUsername();
+				LeafNode chatNode = null;
+				try {
+					if(pubsub.searchNode(chatName2)){
+						
+						chatNode = publisher.getNode(chatName2);
+						if(!subscriber.isSubscribedTo(chatName2)){	
+							subscriber.SubscribeUser(userClass.getUsername(), chatNode);
+							
+						}
+						
+					}else if(!pubsub.searchNode(chatName1)){
+						
+						chatNode = publisher.createNode(chatName1);
+					
+						System.out.println("Error al crear nodo");
+							
+						
+					}else{
+						
+						chatNode = publisher.getNode(chatName1);
+					
+						System.out.println("Error al obtener nodo");
+						
+						
+					}
+				} catch (XMPPException e) {
+					System.out.println("Error al subscribir a nodo");
+					e.printStackTrace();
+				}
 				presence = pubsub.getPrecence(contact.getUser());
 				if(presence != null){
 					status = presence.getStatus();
@@ -203,14 +252,14 @@ public class MainWindow {
 				}
 				contactUser = new User("",contact.getUser(),"",status, type);
 				System.out.println(contact.getUser());
-				ListContactItem item = new ListContactItem(userClass,contactUser,pubsub);
+				ListContactItem item = new ListContactItem(userClass,contactUser,pubsub,publisher,subscriber,chatNode);
 				panel.add(item);
 			}
 		}
 	}
 	
 	private void addGroupsToPanel(JPanel panel){
-		GroupListItem group1 = new GroupListItem();
+		/*GroupListItem group1 = new GroupListItem();
 		GroupListItem group2 = new GroupListItem();
 		GroupListItem group3 = new GroupListItem();
 		GroupListItem group4 = new GroupListItem();
@@ -219,7 +268,27 @@ public class MainWindow {
 		panel.add(group2);
 		panel.add(group3);
 		panel.add(group4);
-		panel.add(group5);
+		panel.add(group5);*/
+		Publisher publisher = new Publisher(pubsub.getConnection(), pubsub.getPubSubMgr());
+		Subscriber subscriber = new Subscriber(pubsub.getConnection(), pubsub.getPubSubMgr());
+		/*try {
+			LeafNode ndgrupos = pubsub.getNode("Grupos");
+			List<Item> items = ndgrupos.getItems();
+			String[] itemM;
+			for(Item item:items){
+				itemM = item.getId().split("-");
+				String[] usernames = itemM[1].split(":");
+				for(int i=0;i<usernames.length; i++){
+					if(usernames[i].equals(userClass.getUsername())){
+						subscriber.SubscribeUser(userClass.getUsername(), pubsub.getNode(itemM[1]));
+						panel.add(comp)
+					}
+				}
+			}
+		} catch (XMPPException e) {
+			System.out.println("No se encontro nodo grupos");
+			e.printStackTrace();
+		}*/
 	}
 	
 	public JFrame getFrame() {

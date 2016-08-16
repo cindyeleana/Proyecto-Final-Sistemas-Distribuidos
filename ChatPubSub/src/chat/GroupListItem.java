@@ -28,7 +28,7 @@ public class GroupListItem extends JPanel {
 		setMaximumSize(new Dimension(383, 58));
 		setBorder(new MatteBorder(0, 0, 1, 0, (Color) Color.LIGHT_GRAY));
 		
-		JLabel lblGroupName = new JLabel("group name");
+		JLabel lblGroupName = new JLabel("grupo 1");
 		lblGroupName.setFont(new Font("Dialog", Font.BOLD, 15));
 		
 		JButton button = new JButton("");

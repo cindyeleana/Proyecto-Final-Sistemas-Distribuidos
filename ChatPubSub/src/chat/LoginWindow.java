@@ -52,8 +52,8 @@ public class LoginWindow {
 	 * Create the application.
 	 */
 	public LoginWindow() {
-		initialize();
 		pubsub = new PubSub();
+		initialize();
 		initConnection();
 	}
 	
