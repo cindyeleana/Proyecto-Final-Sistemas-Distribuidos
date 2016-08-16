@@ -10,36 +10,35 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
+
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.pubsub.LeafNode;
+
 import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GChatWindow {
 
 	private JFrame frame;
+	private Publisher publisher;
+	private Subscriber subscriber;
+	private User user;
+	private LeafNode chatnode;
 
 	public JFrame getFrame() {
 		return frame;
 	}
 
-	/**
-	 * Launch the application.
-	 *//*
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GChatWindow window = new GChatWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
 
 	/**
 	 * Create the application.
 	 */
-	public GChatWindow() {
+	public GChatWindow(Publisher publisher, Subscriber subscriber, User user, LeafNode chatnode) {
+		this.publisher = publisher;
+		this.subscriber = subscriber;
+		this.user = user;
+		this.chatnode =chatnode;
 		initialize();
 	}
 
@@ -50,7 +49,6 @@ public class GChatWindow {
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 351, 322);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
@@ -58,9 +56,17 @@ public class GChatWindow {
 		JTextArea textArea = new JTextArea();
 		textArea.setEditable(false);
 		
+		subscriber.eventCordinator.setChatmsgs(textArea);
+		subscriber.eventCordinator.setContactName("usern");
+		
 		JTextArea textArea_1 = new JTextArea();
 		
 		JButton button = new JButton("");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sendMessage(textArea_1, textArea);
+			}
+		});
 		button.setIcon(new ImageIcon(getClass().getResource("/Sent-25.png")));
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
@@ -105,6 +111,25 @@ public class GChatWindow {
 		button_2.setBorder(new EmptyBorder(0, 0, 0, 0));
 		toolBar.add(button_2);
 		frame.getContentPane().setLayout(groupLayout);
+	}
+	
+	private void sendMessage(JTextArea msg, JTextArea history){
+		String chatMsg;
+		try {
+			publisher.publishItem(chatnode, msg.getText());
+			
+			if(!history.getText().equals(""))
+				chatMsg =  history.getText()+"\n"+"me: "+msg.getText();
+			else 
+				chatMsg = "me: "+msg.getText();
+			
+			history.setText(chatMsg);
+			msg.setText("");
+		} catch (XMPPException e) {
+			System.out.println("Error al publicar item");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

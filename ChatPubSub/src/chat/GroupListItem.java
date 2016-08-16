@@ -10,6 +10,9 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.MatteBorder;
+
+import org.jivesoftware.smackx.pubsub.LeafNode;
+
 import java.awt.Color;
 import javax.swing.JPopupMenu;
 import java.awt.Component;
@@ -21,10 +24,27 @@ import java.awt.event.ActionEvent;
 public class GroupListItem extends JPanel {
 	
 	private GChatWindow gcWindow;
+	private User user;
+	private User contact;
+	private PubSub pubsub;
+	private Publisher pub;
+	private Subscriber sub;
+	private LeafNode chatnode;
+	
 	/**
 	 * Create the panel.
 	 */
-	public GroupListItem() {
+	public GroupListItem(User user, PubSub pubsub, Publisher pub, Subscriber sub, LeafNode chatnode) {
+		this.user = user;
+		this.pubsub = pubsub;
+		this.pub = pub;
+		this.sub = sub;
+		this.chatnode = chatnode;
+		
+		
+		
+		
+		
 		setMaximumSize(new Dimension(383, 58));
 		setBorder(new MatteBorder(0, 0, 1, 0, (Color) Color.LIGHT_GRAY));
 		
@@ -34,7 +54,8 @@ public class GroupListItem extends JPanel {
 		JButton button = new JButton("");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				gcWindow = new GChatWindow();
+				sub.addEventCoordinator(chatnode);
+				gcWindow = new GChatWindow(pub,sub,user, chatnode);
 				gcWindow.getFrame().setLocationRelativeTo(null);
 				gcWindow.getFrame().setVisible(true);
 			}

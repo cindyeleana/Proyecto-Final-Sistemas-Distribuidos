@@ -72,10 +72,15 @@ public class MainWindow {
 		this.subscriber = new Subscriber(pubsub.getConnection(), pubsub.getPubSubMgr());
 		
 		try {
-			groupnd = publisher.createNode("test1:test2:test3:test4:testuser5");
+			//LeafNode group = pubsub.getNode("Grupos");
+			//group.publish(new Item("test1:test2:test3:test4:testuser5"));
+			groupnd = publisher.getNode("test1:test2:test3:test4:testuser4");
+			subscriber.SubscribeUser(userClass.getUsername(), groupnd);
+			System.out.println("Nuevo grupo creado");
 		} catch (XMPPException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("Error al crear grupo");
 		}
 		
 		/*
@@ -243,7 +248,7 @@ public class MainWindow {
 					}
 				} catch (XMPPException e) {
 					System.out.println("Error al subscribir a nodo");
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 				presence = pubsub.getPrecence(contact.getUser());
 				if(presence != null){
@@ -269,8 +274,6 @@ public class MainWindow {
 		panel.add(group3);
 		panel.add(group4);
 		panel.add(group5);*/
-		Publisher publisher = new Publisher(pubsub.getConnection(), pubsub.getPubSubMgr());
-		Subscriber subscriber = new Subscriber(pubsub.getConnection(), pubsub.getPubSubMgr());
 		/*try {
 			LeafNode ndgrupos = pubsub.getNode("Grupos");
 			List<Item> items = ndgrupos.getItems();
@@ -281,7 +284,8 @@ public class MainWindow {
 				for(int i=0;i<usernames.length; i++){
 					if(usernames[i].equals(userClass.getUsername())){
 						subscriber.SubscribeUser(userClass.getUsername(), pubsub.getNode(itemM[1]));
-						panel.add(comp)
+						GroupListItem group1 = new GroupListItem();
+						panel.add(group1);
 					}
 				}
 			}
@@ -289,6 +293,9 @@ public class MainWindow {
 			System.out.println("No se encontro nodo grupos");
 			e.printStackTrace();
 		}*/
+		
+		GroupListItem group1 = new GroupListItem(userClass,pubsub,publisher,subscriber,groupnd);
+		panel.add(group1);
 	}
 	
 	public JFrame getFrame() {
