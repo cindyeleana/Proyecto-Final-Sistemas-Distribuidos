@@ -19,6 +19,7 @@ import org.jivesoftware.smackx.pubsub.LeafNode;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
+import javax.swing.border.LineBorder;
 
 public class ListContactItem extends JPanel {
 
@@ -54,7 +55,7 @@ public class ListContactItem extends JPanel {
 		lblUserStatus.setFont(new Font("Dialog", Font.BOLD, 11));
 		
 		JPanel typePanel = new JPanel();
-		typePanel.setBorder(new CompoundBorder());
+		typePanel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		if(contact.getState().equals("available"))
 			typePanel.setBackground(Color.GREEN);
 		else

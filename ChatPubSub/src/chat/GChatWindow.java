@@ -17,6 +17,8 @@ import org.jivesoftware.smackx.pubsub.LeafNode;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 
 public class GChatWindow {
 
@@ -54,12 +56,14 @@ public class GChatWindow {
 		toolBar.setFloatable(false);
 		
 		JTextArea textArea = new JTextArea();
+		textArea.setBorder(new LineBorder(new Color(0, 0, 0)));
 		textArea.setEditable(false);
 		
 		subscriber.eventCordinator.setChatmsgs(textArea);
-		subscriber.eventCordinator.setContactName("usern");
+		subscriber.eventCordinator.setContactName("user");
 		
 		JTextArea textArea_1 = new JTextArea();
+		textArea_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
 		JButton button = new JButton("");
 		button.addActionListener(new ActionListener() {
@@ -97,7 +101,7 @@ public class GChatWindow {
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		
-		JLabel label = new JLabel("Nombre Grupo");
+		JLabel label = new JLabel(user.getUsername());
 		label.setBorder(new EmptyBorder(0, 5, 0, 40));
 		toolBar.add(label);
 		
@@ -118,12 +122,12 @@ public class GChatWindow {
 		try {
 			publisher.publishItem(chatnode, msg.getText());
 			
-			if(!history.getText().equals(""))
+			/*if(!history.getText().equals(""))
 				chatMsg =  history.getText()+"\n"+"me: "+msg.getText();
 			else 
 				chatMsg = "me: "+msg.getText();
 			
-			history.setText(chatMsg);
+			history.setText(chatMsg);*/
 			msg.setText("");
 		} catch (XMPPException e) {
 			System.out.println("Error al publicar item");

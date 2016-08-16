@@ -255,6 +255,7 @@ public class MainWindow {
 					status = presence.getStatus();
 					type = presence.getType().name();
 				}
+				System.out.println("Status: "+status+" Type:"+type);
 				contactUser = new User("",contact.getUser(),"",status, type);
 				System.out.println(contact.getUser());
 				ListContactItem item = new ListContactItem(userClass,contactUser,pubsub,publisher,subscriber,chatNode);

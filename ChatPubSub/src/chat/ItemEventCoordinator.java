@@ -45,6 +45,7 @@ public class ItemEventCoordinator implements ItemEventListener {
          String itemM[], chatMsg;
          for (Item item : itemss) {
         	 itemM = item.getId().split("-");
+        	 
              System.out.println("Message: " +itemM[1]);
              if(!chatmsgs.getText().equals(""))
  				chatMsg =  chatmsgs.getText()+"\n"+contactName+": "+itemM[1];
