@@ -17,19 +17,13 @@ public class PubSub {
 	protected XMPPConnection connection;
     protected PubSubManager pubSubMgr;
 
-    public PubSub(){
-    	initPubSubMgr();
-    }
+    public PubSub(){}
     
   /*//Constructor 
     public PubSub(String userName, String password, String domain, int port) throws XMPPException, InterruptedException {
         this.init(userName, password, domain, port);
     }*/
 
-    
-    
-    public void initPubSubMgr(){
-    }
 
     public void connect(String domain, int port)throws XMPPException, InterruptedException{
     	SmackConfiguration.setPacketReplyTimeout(60000);

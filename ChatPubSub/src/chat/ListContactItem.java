@@ -92,7 +92,8 @@ public class ListContactItem extends JPanel {
 	
 	private void newChat(){
 		Publisher publisher = new Publisher(pubsub.getConnection(), pubsub.getPubSubMgr());
-		cWindow = new ChatWindow(publisher,user,contact);
+		Subscriber subscriber = new Subscriber(pubsub.getConnection(), pubsub.getPubSubMgr());
+		cWindow = new ChatWindow(publisher,subscriber,user,contact);
 		cWindow.getFrame().setLocationRelativeTo(null);
 		cWindow.getFrame().setVisible(true);
 	}

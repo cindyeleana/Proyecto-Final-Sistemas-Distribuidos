@@ -61,6 +61,13 @@ public class MainWindow {
 	public MainWindow(User user, PubSub pubsub) {
 		this.userClass = user;
 		this.pubsub = pubsub;
+		/*String[] parts = pubsub.getUser().split("@");
+		System.out.println(parts[0]);
+		System.out.println(parts[1]);*/
+		String[] parts = pubsub.getUser().split("@");
+	 	String[] domainParts = parts[1].split("/");
+	 	System.out.println(parts[0]);
+		System.out.println(domainParts[0]);
 		initialize();
 	}
 	
@@ -195,6 +202,7 @@ public class MainWindow {
 					type = presence.getType().name();
 				}
 				contactUser = new User("",contact.getUser(),"",status, type);
+				System.out.println(contact.getUser());
 				ListContactItem item = new ListContactItem(userClass,contactUser,pubsub);
 				panel.add(item);
 			}

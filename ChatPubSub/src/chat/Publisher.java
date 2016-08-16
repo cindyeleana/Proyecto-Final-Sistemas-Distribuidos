@@ -19,6 +19,7 @@ public class Publisher extends PubSub{
 
 	
 	public LeafNode node;
+	public Boolean isNewNode;
 
 	public Publisher(XMPPConnection connection, PubSubManager pubsubmgr)  {
 		super.connection = connection;
@@ -58,12 +59,13 @@ public class Publisher extends PubSub{
 	public LeafNode getOrCreateNode(String nodename) throws XMPPException {
 		try {
 			node = this.getNode(nodename);
-			
+			isNewNode = false;
 		} catch (Exception e) {
 			System.out.println("Nodo no existe");
 			
 			// Crea nuevo nodo
-			node = this.createNode(nodename);	
+			node = this.createNode(nodename);
+			isNewNode = true;
 		}
 		
 		return node;

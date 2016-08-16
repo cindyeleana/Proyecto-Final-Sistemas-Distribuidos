@@ -36,7 +36,8 @@ public class SignupWindow {
 	 * Create the application.
 	 */
 	public SignupWindow(PubSub pubsub) {
-		pubsub = pubsub;
+		this.pubsub = pubsub;
+		initConnection();
 		initialize();
 	}
 	

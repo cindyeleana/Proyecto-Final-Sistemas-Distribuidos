@@ -23,39 +23,30 @@ public class ChatWindow {
 
 	private JFrame frame;
 	private Publisher publisher;
+	private Subscriber subscriber;
 	private User user;
 	private User contact;
 	private LeafNode chatNode;
+	private String chatName;
+	
 	public JFrame getFrame() {
 		return frame;
 	}
 
 	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChatWindow window = new ChatWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-*/
-	/**
 	 * Create the application.
 	 */
-	public ChatWindow(Publisher publisher, User user, User contact) {
+	public ChatWindow(Publisher publisher, Subscriber subscriber, User user, User contact) {
 		this.publisher = publisher;
+		this.subscriber = subscriber;
 		this.user = user;
 		this.contact = contact;
-		String chatName = user.getUsername()+":"+contact.getUsername();
+		chatName = user.getUsername()+":"+contact.getUsername();
 		try {
 			chatNode = publisher.getOrCreateNode(chatName);
+			if(publisher.isNewNode){
+				subscriber.getOrCreateSubscription(contact.getUsername(), chatName);
+			}
 		} catch (XMPPException e) {
 			System.out.println("Error al crear nodo");
 			e.printStackTrace();
@@ -122,10 +113,19 @@ public class ChatWindow {
 	}
 	
 	private void sendMessage(JTextArea msg, JTextArea history){
+		String chatMsg;
 		try {
 			publisher.publishItem(chatNode, msg.getText());
-			history.setText(history.getText()+"\n"+"me:"+msg.getText());
+			
+			if(!history.getText().equals(""))
+				chatMsg =  history.getText()+"\n"+"me: "+msg.getText();
+			else 
+				chatMsg = "me: "+msg.getText();
+			
+			history.setText(chatMsg);
+			msg.setText("");
 		} catch (XMPPException e) {
+			System.out.println("Error al publicar item");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

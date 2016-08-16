@@ -14,8 +14,9 @@ public class Subscriber extends PubSub {
 	
     public HashMap<String, LeafNode> nodeSubscriptions;
 
-    public Subscriber(XMPPConnection connection)  {
+    public Subscriber(XMPPConnection connection, PubSubManager pubsubmgr)  {
     	super.connection = connection;
+    	super.pubSubMgr = pubsubmgr;
         //initNodesSubscribedTo();
     }
 
@@ -47,28 +48,33 @@ public class Subscriber extends PubSub {
     }
     
     
-    public void SubscribeUser(LeafNode nd) throws XMPPException{
+    public void SubscribeUser(String user, LeafNode nd) throws XMPPException{
  	   System.out.println("Entra a susc");
- 	   System.out.println("user es "+ this.getUser());
- 	   nd.subscribe(this.getUser());
+ 	   System.out.println("user es "+ user);
+ 	   String[] parts = this.getUser().split("@");
+ 	   String[] domainParts = parts[1].split("/");
+ 	  System.out.println(user+"@"+parts[1]);
+ 	   //nd.subscribe(user+"@"+parts[1]);
+ 	  nd.subscribe(user+"@"+parts[1]);
  	   
     }
 
 //*******************************+ Suscripcion**********************************   
-    public void getOrCreateSubscription(String nodeName) throws XMPPException {
+    public void getOrCreateSubscription(String user, String nodeName) throws XMPPException {
         //Subscription s = new Subscription(this.getUser(), nodeName);
-    	if (!isSubscribedTo(nodeName)) {
+    	//if (!isSubscribedTo(nodeName)) {
     		LeafNode nd= this.getNode(nodeName);
     		
-    		SubscribeUser(nd);
+    		SubscribeUser(user,nd);
+    		System.out.println(user + " suscrito al nodo " + nodeName +"\n");
     		 //nd.subscribe(this.getUser());
         	nd.addItemEventListener(new ItemEventCoordinator());
         	
        // System.out.println(this.getUser() + " tiene suscripcion al nodo " + nodeName +"\n");
         	
-        } else {
+        //} else {
         	//System.out.println(this.getUser() + " ya esta suscrito a " + nodeName);
-        }
+        //}
     }
 
     
